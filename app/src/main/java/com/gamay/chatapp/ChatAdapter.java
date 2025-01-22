@@ -1,5 +1,7 @@
 package com.gamay.chatapp;
 
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +37,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         ChatMessage message = messages.get(position);
         holder.senderTextView.setText(message.getSender());
-        holder.messageTextView.setText(message.getText());
 
-        // Format timestamp
+        // Handle clickable links in the message text
+        holder.messageTextView.setText(message.getText());
+        holder.messageTextView.setAutoLinkMask(Linkify.WEB_URLS); // Detect and make links clickable
+        holder.messageTextView.setMovementMethod(LinkMovementMethod.getInstance()); // Enable link clicks
+
+        // Format and display the timestamp
         Timestamp timestamp = message.getTimestamp();
         if (timestamp != null) {
             Date date = timestamp.toDate();
