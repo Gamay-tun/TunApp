@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "72477202906",
+    "project_id": "chatapp-867fa",
+    "storage_bucket": "chatapp-867fa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:72477202906:android:fc2e8dce2234f8ea8008e3",
+        "android_client_info": {
+          "package_name": "com.gamay.chatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjg9nm14H0rZNPhMugIP1PlCqKp7agPng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
