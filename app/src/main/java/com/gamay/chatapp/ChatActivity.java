@@ -15,6 +15,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -82,6 +83,7 @@ public class ChatActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentReference -> {
                     messageEditText.setText(""); // Clear the input box
                     Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+                    recyclerView.scrollToPosition(messageList.size() - 1); // Scroll to the latest message
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
@@ -90,27 +92,28 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadMessages() {
-        messagesRef.orderBy("timestamp").addSnapshotListener((value, error) -> {
-            if (error != null) {
-                Toast.makeText(ChatActivity.this, "Error loading messages", Toast.LENGTH_SHORT).show();
-                Log.e("ChatActivity", "Error loading messages", error);
-                return;
-            }
+        messagesRef.orderBy("timestamp", Query.Direction.ASCENDING)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        Toast.makeText(ChatActivity.this, "Error loading messages", Toast.LENGTH_SHORT).show();
+                        Log.e("ChatActivity", "Error loading messages", error);
+                        return;
+                    }
 
-            // Clear and reload messages
-            messageList.clear();
-            if (value != null) {
-                for (QueryDocumentSnapshot document : value) {
-                    String text = document.getString("text");
-                    String sender = document.getString("sender");
-                    Timestamp timestamp = document.getTimestamp("timestamp");
+                    // Clear and reload messages
+                    messageList.clear();
+                    if (value != null) {
+                        for (QueryDocumentSnapshot document : value) {
+                            String text = document.getString("text");
+                            String sender = document.getString("sender");
+                            Timestamp timestamp = document.getTimestamp("timestamp");
 
-                    ChatMessage message = new ChatMessage(text, timestamp, sender);
-                    messageList.add(message);
-                }
-                chatAdapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(messageList.size() - 1);
-            }
-        });
+                            ChatMessage message = new ChatMessage(text, timestamp, sender);
+                            messageList.add(message);
+                        }
+                        chatAdapter.notifyDataSetChanged();
+                        recyclerView.scrollToPosition(messageList.size() - 1); // Scroll to the latest message
+                    }
+                });
     }
 }
